@@ -11,7 +11,7 @@
       str/split-lines))
 
 (defn find-code [input]
-  (let [digits (filter #(Character/isDigit %) (seq input))]
+  (let [digits (re-seq #"\d" input)]
     (parse-long (str (first digits) (last digits)))))
 
 (def first-num #"[0-9]|one|two|three|four|five|six|seven|eight|nine")
