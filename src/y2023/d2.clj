@@ -22,8 +22,7 @@
                  parse-long)
         rounds (-> line
                    (str/split #": ")
-                   rest
-                   first
+                   second
                    parse-cubes)]
     [game rounds]))
 
@@ -51,10 +50,11 @@
 (defn solve-part-1
   "The solution to part 1. Will be called with the result of the generator"
   [input]
-  (let [valid-games (keep (fn [[game rounds]]
-                            (when (valid-game? rounds) game))
-                          input)]
-    (reduce + valid-games)))
+  (transduce
+   (comp (filter #(valid-game? (second %)))
+         (map first))
+   +
+   input))
 
 (defn solve-part-2
   "The solution to part 2. Will be called with the result of the generator"
