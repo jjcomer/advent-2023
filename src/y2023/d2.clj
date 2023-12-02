@@ -14,16 +14,12 @@
         (str/split cubes #"; ")))
 
 (defn parse-game [line]
-  (let [game (-> line
-                 (str/split #": ")
-                 first
+  (let [[game rounds] (str/split line #": ")
+        game (-> game
                  (str/split #" ")
                  last
                  parse-long)
-        rounds (-> line
-                   (str/split #": ")
-                   second
-                   parse-cubes)]
+        rounds (parse-cubes rounds)]
     [game rounds]))
 
 ;; Solution Logic
