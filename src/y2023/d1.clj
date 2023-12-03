@@ -14,8 +14,8 @@
   (let [digits (re-seq #"\d" input)]
     (parse-long (str (first digits) (last digits)))))
 
-(def first-num #"[0-9]|one|two|three|four|five|six|seven|eight|nine")
-(def last-num #"^.*([0-9]|one|two|three|four|five|six|seven|eight|nine).*$")
+(def first-num #"\d|one|two|three|four|five|six|seven|eight|nine")
+(def last-num #"^.*(\d|one|two|three|four|five|six|seven|eight|nine).*$")
 
 (defn convert [n]
   (case n
