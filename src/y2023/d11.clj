@@ -27,7 +27,8 @@
                                  acc
                                  (conj acc x)))
                              #{}
-                             (map-indexed vector (map (fn [x] (into #{} (map #(nth % x) lines))) (range max-x))))]
+                             (map-indexed vector (map (fn [x] (into #{} (map #(nth % x) lines)))
+                                                      (range max-x))))]
     [galaxies y-expansions x-expansions]))
 
 ;; Solution Logic
@@ -38,11 +39,10 @@
     (range p2 p1)))
 
 (defn compute-distance [[g1x g1y] [g2x g2y] y-expansions x-expansions factor]
-  (let [distance (+ (abs (- g1x g2x))
-                    (abs (- g1y g2y))
-                    (* factor (count (filter x-expansions (gen-range g1x g2x))))
-                    (* factor (count (filter y-expansions (gen-range g1y g2y)))))]
-    distance))
+  (+ (abs (- g1x g2x))
+     (abs (- g1y g2y))
+     (* factor (count (filter x-expansions (gen-range g1x g2x))))
+     (* factor (count (filter y-expansions (gen-range g1y g2y))))))
 
 (defn gen-pairs [galaxies]
   (into #{} (for [a galaxies
