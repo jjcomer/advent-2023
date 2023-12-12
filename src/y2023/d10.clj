@@ -73,7 +73,7 @@
                (if-let [x (first xs)]
                  (if (the-loop [y x])
                    (recur (rest xs)
-                          (if (#{\| \L \J} (pipes [y x]))
+                          (if (#{\| \F \7} (pipes [y x]))
                             (not inside)
                             inside)
                           fill-count)
