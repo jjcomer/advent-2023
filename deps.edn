@@ -3,7 +3,8 @@
         aysylu/loom {:mvn/version "1.0.2"}
         org.clojure/math.numeric-tower {:mvn/version "0.0.5"}
         org.clojure/data.priority-map {:mvn/version "1.1.0"}
-        org.clojure/core.memoize {:mvn/version "1.0.257"}}
+        org.clojure/core.memoize {:mvn/version "1.0.257"}
+        org.flatland/ordered {:mvn/version "1.15.11"}}
  :aliases {:aoc {:ns-default aoc
                  :extra-paths ["script" "src"]
                  :extra-deps {babashka/fs {:mvn/version "0.1.11"}
@@ -13,4 +14,5 @@
                               aysylu/loom {:mvn/version "1.0.2"}
                               org.clojure/math.numeric-tower {:mvn/version "0.0.5"}
                               org.clojure/data.priority-map {:mvn/version "1.1.0"}
-                              org.clojure/core.memoize {:mvn/version "1.0.257"}}}}}
+                              org.clojure/core.memoize {:mvn/version "1.0.257"}
+                              org.flatland/ordered {:mvn/version "1.15.11"}}}}}
