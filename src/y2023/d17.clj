@@ -40,24 +40,22 @@
       (if (not (contains? grid position))
         (recur (pop queue) cache)
         (let [new-heatloss (+ heatloss (get grid position))]
-          (if (and (= goal position) (>= current-straight min-straight))
+          (if (= goal position)
             new-heatloss
             (if (and (contains? cache cache-key)
                      (<= (get cache cache-key) new-heatloss))
               (recur (pop queue) cache)
               (let [new-cache (assoc cache cache-key new-heatloss)
                     straight (if (< current-straight max-straight)
-                               [[(move position direction) direction (inc current-straight)]]
-                               [])
+                               {[(move position direction) direction (inc current-straight)] new-heatloss}
+                               {})
                     turns (if (>= current-straight min-straight)
-                            (map (fn [d]
-                                   [(move position d) d 1])
-                                 (turn direction))
-                            [])]
-                (recur (reduce (fn [q m]
-                                 (assoc q m new-heatloss))
-                               (pop queue)
-                               (concat turns straight))
+                            (reduce (fn [acc d]
+                                      (assoc acc [(move position d) d 1] new-heatloss))
+                                    {}
+                                    (turn direction))
+                            {})]
+                (recur (merge-with min (pop queue) straight turns)
                        new-cache))))))
       -1)))
 
@@ -82,4 +80,3 @@
   "The solution to part 2. Will be called with the result of the generator"
   [[grid height width]]
   (min-heat-loss grid [(dec height) (dec width)] 4 10))
-
