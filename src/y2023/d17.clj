@@ -40,7 +40,7 @@
       (if (not (contains? grid position))
         (recur (pop queue) cache)
         (let [new-heatloss (+ heatloss (get grid position))]
-          (if (= goal position)
+          (if (and (= goal position) (<= min-straight current-straight))
             new-heatloss
             (if (and (contains? cache cache-key)
                      (<= (get cache cache-key) new-heatloss))
