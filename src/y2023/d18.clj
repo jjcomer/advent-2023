@@ -19,8 +19,8 @@
 (def p2-directions
   {0 [0 1] 2 [0 -1] 1 [1 0] 3 [-1 0]})
 
-(defn polygon-area [vertexs]
-  (let [v (cons (last vertexs) vertexs)
+(defn polygon-area [vertices]
+  (let [v (cons (last vertices) vertices)
         sum (reduce (fn [acc [[x1 y1] [x2 y2]]]
                       (+ acc
                          (- (* x2 y1)
