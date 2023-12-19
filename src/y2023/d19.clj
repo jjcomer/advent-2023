@@ -6,10 +6,19 @@
 
 ;; Generator Logic
 
+(defn parse-predicate [pred]
+  (let [[p d] (str/split pred #":")]
+    (if d
+      {:key (keyword (str (first p)))
+       :func (case (second p) \< < \> >)
+       :com (parse-long (subs p 2))
+       :dest d}
+      {:dest p})))
+
 (defn parse-workflows [ws]
   (reduce (fn [acc w]
             (let [[w-name preds] (str/split w #"\{|\}")]
-              (assoc acc w-name (str/split preds #","))))
+              (assoc acc w-name (mapv parse-predicate (str/split preds #",")))))
           {}
           (str/split-lines ws)))
 
@@ -25,14 +34,10 @@
 ;; Solution Logic
 
 (defn eval-predicates [predicates test]
-  (some (fn [pred]
-          (let [[p dest] (str/split pred #":")]
-            (if dest
-              (let [k (keyword (str (first p)))
-                    f (case (second p) \< < \> >)
-                    c (parse-long (subs p 2))]
-                (when (f (get test k) c) dest))
-              p)))
+  (some (fn [{:keys [key func com dest]}]
+          (if key
+            (when (func (get test key) com) dest)
+            dest))
         predicates))
 
 (defn eval-test [workflows test]
@@ -58,28 +63,24 @@
     (loop [total 0
            ranges ranges
            preds (get workflows state)]
-      (if-let [pred (first preds)]
-        (let [[p dest] (str/split pred #":")]
-          (if dest
-            (let [f (second p)
-                  c-val (parse-long (subs p 2))
-                  c-key (keyword (str (first p)))
-                  [c-start c-end] (get ranges c-key)]
-              (if (< c-start c-val c-end)
-                (let [[new-range remaining-range] (if (= \< f)
-                                                    [(assoc ranges c-key [c-start (dec c-val)])
-                                                     (assoc ranges c-key [c-val c-end])]
-                                                    [(assoc ranges c-key [(inc c-val) c-end])
-                                                     (assoc ranges c-key [c-start c-val])])]
-                  (recur (+ total (get-total-combinations workflows dest new-range))
-                         remaining-range
-                         (rest preds)))
-                (recur total
-                       ranges
-                       (rest preds))))
-            (recur (+ total (get-total-combinations workflows p ranges))
-                   ranges
-                   (rest preds))))
+      (if-let [{:keys [key func com dest]} (first preds)]
+        (if key
+          (let [[c-start c-end] (get ranges key)]
+            (if (< c-start com c-end)
+              (let [[new-range remaining-range] (if (= < func)
+                                                  [(assoc ranges key [c-start (dec com)])
+                                                   (assoc ranges key [com c-end])]
+                                                  [(assoc ranges key [(inc com) c-end])
+                                                   (assoc ranges key [c-start com])])]
+                (recur (+ total (get-total-combinations workflows dest new-range))
+                       remaining-range
+                       (rest preds)))
+              (recur total
+                     ranges
+                     (rest preds))))
+          (recur (+ total (get-total-combinations workflows dest ranges))
+                 ranges
+                 (rest preds)))
         total))))
 
 ;; Entry Points
