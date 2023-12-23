@@ -6,6 +6,7 @@
         org.clojure/core.memoize {:mvn/version "1.0.257"}
         org.flatland/ordered {:mvn/version "1.15.11"}}
  :aliases {:aoc {:ns-default aoc
+                 :jvm-opts ["-Xss32M"]
                  :extra-paths ["script" "src"]
                  :extra-deps {babashka/fs {:mvn/version "0.1.11"}
                               criterium/criterium {:mvn/version "0.4.6"}
